@@ -9,12 +9,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.BookStore.domain.Book;
 import com.example.BookStore.domain.BookRepository;
+import com.example.BookStore.domain.CategoryRepository;
 
 @Controller
 public class BookController {
 	
 	@Autowired
 	private BookRepository brepo;
+	@Autowired
+	private CategoryRepository crepo;
 	
 	@GetMapping("/index")
 	public String getIndex() {
@@ -36,6 +39,7 @@ public class BookController {
 	@GetMapping("/addbook")
 	public String addbookGet(Model model) {
 		model.addAttribute("book", new Book());
+		model.addAttribute("cates", crepo.findAll());
 		return "addbook";
 	}
 	
@@ -49,6 +53,7 @@ public class BookController {
 	public String editbookGet(@PathVariable("id") Long id, Model model) {
 		Book book = brepo.findById(id).get();
 		model.addAttribute("book", book);
+		model.addAttribute("cates", crepo.findAll());
 		return "editbook";
 	}
 }
