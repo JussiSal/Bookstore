@@ -11,6 +11,8 @@ import com.example.BookStore.domain.Book;
 import com.example.BookStore.domain.BookRepository;
 import com.example.BookStore.domain.Category;
 import com.example.BookStore.domain.CategoryRepository;
+import com.example.BookStore.domain.User;
+import com.example.BookStore.domain.UserRepository;
 
 @SpringBootApplication
 public class BookStoreApplication {
@@ -23,8 +25,14 @@ public class BookStoreApplication {
 	}
 	
 	@Bean
-	public CommandLineRunner bookstoreDemo(BookRepository brepo, CategoryRepository crepo) {
+	public CommandLineRunner bookstoreDemo(BookRepository brepo, CategoryRepository crepo, UserRepository userRepository) {
 		return (args) -> {
+			
+			User user1 = new User("user","$2b$10$nD21pS8NNhTszXHcxL9EheD.Ja5uyGoxQuJptgvzrEf4isnpipu2C","user.user@gmail.com","USER");
+			User user2 = new User("admin", "$2b$10$W84aPB/FVKJJbUj/jDJUsOibmKipSBOUaDU22trfPtfIsXBJxxlT2","admin.admin@gmail.com" ,"ADMIN");
+			userRepository.save(user1);
+			userRepository.save(user2);
+			
 			Category cate1  = new Category("Tiede");
 			Category cate2  = new Category("Fiktio");
 			crepo.save(cate1);

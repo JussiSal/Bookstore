@@ -1,11 +1,16 @@
 package com.example.BookStore.web;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.BookStore.domain.Book;
 import com.example.BookStore.domain.BookRepository;
@@ -24,6 +29,11 @@ public class BookController {
 		return "index";
 	}
 	
+	@RequestMapping(value="/login")
+    public String login() {	
+        return "login";
+    }
+	
 	@GetMapping({"/", "/booklist"})
 	public String booklistGet(Model model) {
 		model.addAttribute("books", brepo.findAll());
@@ -31,6 +41,7 @@ public class BookController {
 	}
 	
 	@GetMapping("/delete/{id}")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public String bookDelete(@PathVariable("id") Long id, Model model) {
 		brepo.deleteById(id);
 		return "redirect:../booklist";
@@ -56,4 +67,15 @@ public class BookController {
 		model.addAttribute("cates", crepo.findAll());
 		return "editbook";
 	}
+	
+	//Restiä
+	@GetMapping("/books")
+    public @ResponseBody List<Book> booksRest() {	
+        return (List<Book>) brepo.findAll();
+    }
+    
+    @GetMapping(value="/book/{id}")
+    public @ResponseBody Book findBookRest(@PathVariable("id") Long id) {	
+    	return brepo.findById(id).get();
+    }
 }
